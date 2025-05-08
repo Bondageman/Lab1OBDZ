@@ -21,7 +21,7 @@ namespace Lab1OBDZ
         {
             this.Height = 320;
             h.bs1 = new BindingSource();
-            h.bs1.DataSource = h.myfunDt("SELECT * from userName");
+            h.bs1.DataSource = h.myfunDt("SELECT * from ballistic_tests");
             dataGridView1.DataSource = h.bs1;
             dataGridView1.RowHeadersVisible = false;
             bindingNavigator1.BindingSource = h.bs1;
@@ -115,6 +115,11 @@ namespace Lab1OBDZ
                 this.Height = 320;
                 groupBox1.Visible = false;
             }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

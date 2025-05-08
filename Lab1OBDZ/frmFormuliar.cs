@@ -87,5 +87,10 @@ namespace Lab1OBDZ
             for (int i = 0; i < dataGridView1.RowCount; i++)
                 dataGridView1.Rows[i].Selected = false;
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
