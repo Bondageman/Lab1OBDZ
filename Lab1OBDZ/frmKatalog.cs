@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySql.Data.MySqlClient;
 
 namespace Lab1OBDZ
 {
@@ -210,6 +211,75 @@ namespace Lab1OBDZ
         private void cmbSex_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        {
+            AddInfo fladd = new AddInfo();
+            fladd.ShowDialog();
+            h.bs1.DataSource = h.myfunDt("select * from weapon");
+            dataGridView1.DataSource = h.bs1;
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            //знаходимо значення ключового поля поточного запису
+            h.curVa10 = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+            h.keyName = dataGridView1.Columns[0].Name;
+
+            DeleteInfo f3 = new DeleteInfo();
+            f3.ShowDialog(); //показуємо форму в режимі діалогу
+
+            //оновлюємо джерело даних застосунку клієнта
+            h.bs1.DataSource = h.myfunDt("SELECT * FROM weapon");
+            dataGridView1.DataSource = h.bs1; //оновлюємо DataGridView
+        }
+
+        private void dataGridView1_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
+        {
+            h.keyName = dataGridView1.Columns[0].Name;
+            h.curVa10 = dataGridView1.CurrentRow.Index.ToString();
+
+            int curColInx = dataGridView1.CurrentCell.ColumnIndex;
+            string curColName = dataGridView1.Columns[curColInx].Name;
+            string newCurCellVal = e.Value.ToString();
+
+            if (curColName == "Weapon_Name" || curColName == "Weapon_Calibre" || curColName == "Weapon_Type" || curColName == "Weapon_Estimated_Range")
+            {
+                newCurCellVal = "'" + newCurCellVal + "'"; // поле текстовое - берется в лапки
+            }
+
+            // у дійсному числі кома (так у dataGridView) замінюється на крапку (як в MySQL)
+            //if (curColName == "Size")
+            //{
+            //    newCurCellVal = newCurCellVal.Replace(',', '.');
+            //}
+
+            string sqlStr = "UPDATE weapon SET " + curColName + " = " + newCurCellVal + " WHERE " + h.keyName + " = " + h.curVa10;
+            //MessageBox.Show(sqlStr);
+
+            using (MySqlConnection con = new MySqlConnection(h.ConStr))
+            {
+                MySqlCommand cmd = new MySqlCommand(sqlStr, con);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            // знаходимо значення ключового поля поточного запису
+            h.curVa10 = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+            h.keyName = dataGridView1.Columns[0].Name;
+
+            ChangeForm f4 = new ChangeForm();
+            f4.ShowDialog(); // показуємо форму у режимі діалогу
+
+            // оновлюємо джерело даних застосунку клієнта
+            h.bs1.DataSource = h.myfunDt("SELECT * FROM weapon");
+            dataGridView1.DataSource = h.bs1; // оновлюємо DataGridView
         }
     }
 }
