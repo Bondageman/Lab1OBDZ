@@ -116,6 +116,8 @@ namespace Lab1OBDZ
         public static string keyName { get; set; }
         public static string curVa10 { get; set; }
 
+        public static string pathToPhoto { get; set; }
+
         public static BindingSource bs1 { get; set; }
         public static DataTable myfunDt(string commandString)
         {
