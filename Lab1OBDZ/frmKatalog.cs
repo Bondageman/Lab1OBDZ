@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace Lab1OBDZ
 {
     public partial class frmKatalog : Form
     {
+        string path = Path.GetFullPath(@"..\..\");
+        DataTable dt;
         public frmKatalog()
         {
             InitializeComponent();
@@ -59,6 +62,11 @@ namespace Lab1OBDZ
                 cmbSex.Items.Add(dtRange.Rows[i][0].ToString());
             }
             cmbSex.DropDownStyle = ComboBoxStyle.DropDownList;//заборона редагування comboBox
+
+            path += @"\report";
+
+            dt = (DataTable)h.bs1.DataSource;
+
 
         }
 
@@ -280,6 +288,24 @@ namespace Lab1OBDZ
             // оновлюємо джерело даних застосунку клієнта
             h.bs1.DataSource = h.myfunDt("SELECT * FROM weapon");
             dataGridView1.DataSource = h.bs1; // оновлюємо DataGridView
+        }
+
+        private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            int rIndx = dataGridView1.CurrentCell.RowIndex;
+
+            // Отримуємо значення з клітинки як object для безпечної перевірк
+            if (dataGridView1.Rows[rIndx].Cells[5].Value.ToString().Length > 0)
+            {
+                byte[] a = (byte[])dataGridView1.Rows[rIndx].Cells[5].Value;
+                MemoryStream memImage = new MemoryStream(a);
+                pictureBox1.Image = Image.FromStream(memImage);
+                memImage.Close();
+            }
+            else
+            {
+                pictureBox1.Image = Image.FromFile(@"C:\Users\VOlod\Downloads\i_am_like_p.didi.jpg");
+            }
         }
     }
 }
